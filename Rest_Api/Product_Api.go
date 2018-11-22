@@ -33,14 +33,6 @@ func getOne(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(&Product{})
 }
-func createProduct(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	var product Product
-	_ = json.NewDecoder(r.Body).Decode(&product)
-	product.ID = strconv.Itoa(rand.Intn(1000))
-	products = append(products, product)
-	json.NewEncoder(w).Encode(product)
-}
 func putProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
@@ -56,6 +48,15 @@ func putProduct(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
+func createProduct(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var product Product
+	_ = json.NewDecoder(r.Body).Decode(&product)
+	product.ID = strconv.Itoa(rand.Intn(1000))
+	products = append(products, product)
+	json.NewEncoder(w).Encode(product)
+}
+
 func deleteProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
@@ -76,8 +77,8 @@ func main() {
 
 	r.HandleFunc("/products", getAll).Methods("GET")
 	r.HandleFunc("/products/{id}", getOne).Methods("GET")
-	r.HandleFunc("/products", createProduct).Methods("POST")
 	r.HandleFunc("/products/{id}", putProduct).Methods("PUT")
+	r.HandleFunc("/products", createProduct).Methods("POST")
 	r.HandleFunc("/products/{id}", deleteProduct).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":8000", r))
