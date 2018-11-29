@@ -10,6 +10,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var GitCommit string
+
 type Product struct {
 	ID    string `json:"id"`
 	Title string `json:"title"`
