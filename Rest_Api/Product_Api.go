@@ -42,7 +42,11 @@ func putProduct(w http.ResponseWriter, r *http.Request) {
 		if item.ID == params["id"] {
 			products = append(products[:index], products[index+1:]...)
 			var product Product
-			_ = json.NewDecoder(r.Body).Decode(&product)
+			er := json.NewDecoder(r.Body).Decode(&product)
+			if er != nil {
+				//fmt.Println("error in got product")
+				panic(er)
+			}
 			product.ID = params["id"]
 			products = append(products, product)
 			json.NewEncoder(w).Encode(product)
@@ -53,7 +57,11 @@ func putProduct(w http.ResponseWriter, r *http.Request) {
 func createProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var product Product
-	_ = json.NewDecoder(r.Body).Decode(&product)
+	er := json.NewDecoder(r.Body).Decode(&product)
+	if er != nil {
+		//fmt.Println("error in got product")
+		panic(er)
+	}
 	product.ID = strconv.Itoa(rand.Intn(1000))
 	products = append(products, product)
 	json.NewEncoder(w).Encode(product)
